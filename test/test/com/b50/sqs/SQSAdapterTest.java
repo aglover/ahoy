@@ -34,7 +34,6 @@ public class SQSAdapterTest {
         ReceiveMessageResult receiveMessageResult = mock(ReceiveMessageResult.class);
         when(mockClient.receiveMessage(any(ReceiveMessageRequest.class))).thenReturn(receiveMessageResult);
 
-
         List<Message> mockedMsgs = new LinkedList<Message>();
         for (int x = 0; x < 3; x++) {
             mockedMsgs.add(getMessage("TESTING 1,2,3", x + ""));
@@ -58,8 +57,6 @@ public class SQSAdapterTest {
         for (int x = 0; x < 3; x++) {
             assertEquals("wasReceived was not true", true, wasReceived[x]);
         }
-
-
     }
 
     @Test
@@ -93,7 +90,6 @@ public class SQSAdapterTest {
 
         Thread.sleep(2000);
         assertEquals("wasReceived was not true", true, wasReceived[0]);
-
     }
 
     private Message getMessage(String body, String id) {
