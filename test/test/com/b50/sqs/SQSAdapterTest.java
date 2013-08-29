@@ -93,10 +93,7 @@ public class SQSAdapterTest {
     }
 
     private Message getMessage(String body, String id) {
-        Message simpleMessage = new Message();
-        simpleMessage.setBody(body);
-        simpleMessage.setMessageId(id);
-        return simpleMessage;
+       return new Message().withBody(body).withMessageId(id);
     }
 
     @Test
