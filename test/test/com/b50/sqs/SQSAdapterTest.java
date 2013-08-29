@@ -12,7 +12,6 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -26,6 +25,44 @@ import static org.mockito.Mockito.when;
 public class SQSAdapterTest {
 
     @Test
+    public void testAdapterReceiveManyMessages() throws Exception {
+
+        AmazonSQSClient mockClient = mock(AmazonSQSClient.class);
+        CreateQueueResult mockQueueResult = mock(CreateQueueResult.class);
+        when(mockClient.createQueue(any(CreateQueueRequest.class))).thenReturn(mockQueueResult);
+        when(mockQueueResult.getQueueUrl()).thenReturn("URL");
+        ReceiveMessageResult receiveMessageResult = mock(ReceiveMessageResult.class);
+        when(mockClient.receiveMessage(any(ReceiveMessageRequest.class))).thenReturn(receiveMessageResult);
+
+
+        List<Message> mockedMsgs = new LinkedList<Message>();
+        for (int x = 0; x < 3; x++) {
+            mockedMsgs.add(getMessage("TESTING 1,2,3", x + ""));
+        }
+        when(receiveMessageResult.getMessages()).thenReturn(mockedMsgs);
+
+        SQSAdapter sqs = new SQSAdapter(mockClient, "some queue");
+        assertNotNull("sqs object was null", sqs);
+
+        final boolean[] wasReceived = {false, false, false, false};
+        sqs.receive(new MessageReceivedCallback() {
+            @Override
+            public void onReceive(String id, String message) {
+                wasReceived[Integer.valueOf(id)] = true;
+                assertEquals("message should be TESTING 1,2,3", "TESTING 1,2,3", message);
+            }
+        }
+        );
+
+        Thread.sleep(2000);
+        for (int x = 0; x < 3; x++) {
+            assertEquals("wasReceived was not true", true, wasReceived[x]);
+        }
+
+
+    }
+
+    @Test
     public void testAdapterReceive() throws Exception {
 
         AmazonSQSClient mockClient = mock(AmazonSQSClient.class);
@@ -35,9 +72,7 @@ public class SQSAdapterTest {
         ReceiveMessageResult receiveMessageResult = mock(ReceiveMessageResult.class);
         when(mockClient.receiveMessage(any(ReceiveMessageRequest.class))).thenReturn(receiveMessageResult);
 
-        Message simpleMessage = new Message();
-        simpleMessage.setBody("TESTING 1,2,3");
-        simpleMessage.setMessageId("1");
+        Message simpleMessage = getMessage("TESTING 1,2,3", "1");
         List<Message> mockedMsgs = new LinkedList<Message>();
         mockedMsgs.add(simpleMessage);
         when(receiveMessageResult.getMessages()).thenReturn(mockedMsgs);
@@ -59,6 +94,13 @@ public class SQSAdapterTest {
         Thread.sleep(2000);
         assertEquals("wasReceived was not true", true, wasReceived[0]);
 
+    }
+
+    private Message getMessage(String body, String id) {
+        Message simpleMessage = new Message();
+        simpleMessage.setBody(body);
+        simpleMessage.setMessageId(id);
+        return simpleMessage;
     }
 
     @Test
