@@ -13,7 +13,7 @@ sqs.receive(new MessageReceivedCallback() {
 });
 ``` 
 
-In the code above, `onReceive` will be invoked once a message is popped off of an SQS queue named "some queue" -- note, the callback receives the message body as well as the `Message`'s ID. 
+In the code above, `onReceive` will be invoked once a message is popped off of an SQS queue named "some queue" -- note, the callback receives the message body as well as the messages ID (all provided via the SDK `Message` object). 
 
 You can attach a callback on a `send` as well:
 
