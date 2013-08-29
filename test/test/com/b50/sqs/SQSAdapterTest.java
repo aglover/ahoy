@@ -4,7 +4,7 @@ import com.amazonaws.services.sqs.AmazonSQSClient;
 import com.amazonaws.services.sqs.model.*;
 import com.b50.sqs.MessageReceivedCallback;
 import com.b50.sqs.MessageSentCallback;
-import com.b50.sqs.SQSQueueAdapter;
+import com.b50.sqs.SQSAdapter;
 import org.junit.Test;
 
 import java.util.LinkedList;
@@ -42,7 +42,7 @@ public class SQSAdapterTest {
         mockedMsgs.add(simpleMessage);
         when(receiveMessageResult.getMessages()).thenReturn(mockedMsgs);
 
-        SQSQueueAdapter sqs = new SQSQueueAdapter(mockClient, "some queue");
+        SQSAdapter sqs = new SQSAdapter(mockClient, "some queue");
         assertNotNull("sqs object was null", sqs);
 
         final boolean[] wasReceived = {false};
@@ -68,7 +68,7 @@ public class SQSAdapterTest {
         when(mockClient.sendMessage(any(SendMessageRequest.class))).thenReturn(mockResult);
         when(mockResult.getMessageId()).thenReturn("TEST");
 
-        SQSQueueAdapter sqs = new SQSQueueAdapter(mockClient, "some queue");
+        SQSAdapter sqs = new SQSAdapter(mockClient, "some queue");
         assertNotNull("sqs object was null", sqs);
 
         final boolean[] wasReceived = {false};

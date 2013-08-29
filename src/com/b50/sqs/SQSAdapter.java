@@ -18,12 +18,12 @@ import java.util.concurrent.Executors;
  * Sample code: https://github.com/aws/aws-sdk-java/blob/master/src/samples/AmazonSimpleQueueService/SimpleQueueServiceSample.java
  * JavaDocs: http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/sqs/AmazonSQS.html
  */
-public class SQSQueueAdapter {
+public class SQSAdapter {
     private final ExecutorService pool = Executors.newFixedThreadPool(10);
     private AmazonSQS sqs;
     private String queueURL;
 
-    public SQSQueueAdapter(final AmazonSQS sqs, final String queueURL) {
+    public SQSAdapter(final AmazonSQS sqs, final String queueURL) {
         this.sqs = sqs;
         this.queueURL = queueURL;
     }
@@ -35,7 +35,7 @@ public class SQSQueueAdapter {
      * @param awsSecret
      * @param queueName
      */
-    public SQSQueueAdapter(final String awsKey, final String awsSecret, final String queueName) {
+    public SQSAdapter(final String awsKey, final String awsSecret, final String queueName) {
         sqs = new AmazonSQSClient(new BasicAWSCredentials(awsKey, awsSecret));
         queueURL = sqs.createQueue(new CreateQueueRequest(queueName)).getQueueUrl();
     }
