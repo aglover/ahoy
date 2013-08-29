@@ -13,7 +13,9 @@ sqs.receive(new MessageReceivedCallback() {
 });
 ``` 
 
-You can attach a callback on an SQS send as well:
+In the code above, `onReceive` will be invoked once a message is popped off of an SQS queue named "some queue" -- note, the callback receives the message body as well as the `Message`'s ID. 
+
+You can attach a callback on a `send` as well:
 
 ```
 SQSAdapter sqs = new SQSAdapter("key", "secret", "some queue");
@@ -23,6 +25,8 @@ sqs.send("Message", new MessageSentCallback() {
   }
 });
 ```
+
+In this case, you can get a receipt in the form of the AWS ID attached to the SQS message. `send` is overridden; thus, you do not have to pass in an implementation of `MessageSentCallback`.
 
 Notice something else? Yeah, that's right, you don't have to deal with the myriad AWS SDK classes required to receive or send a message. No dealing with `SendMessageResult`, `Message`, `SendMessageRequest`, `DeleteMessageRequest`, `ReceiveMessageRequest`, and the list goes on.
 
