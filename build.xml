@@ -6,6 +6,8 @@
     <property name="build.test.dir" value="${build.dir}/test"/>
     <property name="classes.dir" value="${build.dir}/classes"/>
 
+    <property file="local.properties"/>
+
     <path id="classpath">
         <fileset dir="${lib.dir}" includes="**/*.jar"/>
     </path>
@@ -33,9 +35,17 @@
     </target>
 
 
-    <target name="compile-tests" depends="compile">
+    <target name="compile-all-tests" depends="compile">
         <mkdir dir="${build.dir}/test-classes"/>
-        <javac srcdir="test/" destdir="${build.dir}/test-classes"
+        <javac srcdir="test/unit" destdir="${build.dir}/test-classes"
+               includeAntRuntime="false" source="1.6" debug="true">
+            <classpath>
+                <path refid="classpath"/>
+                <pathelement path="${classes.dir}"/>
+            </classpath>
+        </javac>
+
+        <javac srcdir="test/functional" destdir="${build.dir}/test-classes"
                includeAntRuntime="false" source="1.6" debug="true">
             <classpath>
                 <path refid="classpath"/>
@@ -44,7 +54,7 @@
         </javac>
     </target>
 
-    <target name="test" depends="compile-tests" description="runs JUnit tests">
+    <target name="test" depends="compile-all-tests" description="runs JUnit tests">
         <junit fork="true" forkmode="once" haltonfailure="false" haltonerror="false"
                failureproperty="tests.failures" errorproperty="tests.errors"
                includeantruntime="true" showoutput="true" printsummary="true">
@@ -56,7 +66,41 @@
             <formatter type="xml"/>
             <formatter type="plain" usefile="false"/>
             <batchtest fork="yes" todir="./${build.dir}/">
-                <fileset dir="test/">
+                <fileset dir="test/unit">
+                    <include name="**/*Test.java"/>
+                </fileset>
+            </batchtest>
+        </junit>
+        <mkdir dir="./${build.dir}/reports"/>
+        <junitreport todir="./${build.dir}/reports">
+            <fileset dir="./${build.dir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="./${build.dir}/reports/html"/>
+        </junitreport>
+        <fail if="tests.failures"
+              message="There were JUnit failures -- see the reports in ./${build.dir}/reports"/>
+    </target>
+
+    <target name="functional-test" depends="compile-all-tests" description="runs JUnit functional tests">
+        <junit fork="true" forkmode="once" haltonfailure="false" haltonerror="false"
+               failureproperty="tests.failures" errorproperty="tests.errors"
+               includeantruntime="true" showoutput="true" printsummary="true">
+            <classpath>
+                <path refid="classpath"/>
+                <pathelement path="${classes.dir}"/>
+                <pathelement path="${build.dir}/test-classes"/>
+            </classpath>
+            <formatter type="xml"/>
+
+            <!-- see local.properties and/or default.properties -->
+            <sysproperty key="key" value="${aws.key}"/>
+            <sysproperty key="secret" value="${aws.secret}"/>
+            <sysproperty key="queue" value="${aws.queue}"/>
+
+            <formatter type="plain" usefile="false"/>
+            <batchtest fork="yes" todir="./${build.dir}/">
+                <fileset dir="test/functional">
                     <include name="**/*Test.java"/>
                 </fileset>
             </batchtest>
