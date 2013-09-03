@@ -41,8 +41,7 @@ public class AhoyFunctionalTest {
 
         Thread.sleep(2000);
         assertEquals("callback for sent wasn't invoked", true, wasSent[0]);
-        Thread.sleep(20000); //30 sec
-
+        Thread.sleep(20000);
 
         final boolean[] wasReceived = {false};
         ahoy.receive(new MessageReceivedCallback() {
@@ -54,7 +53,7 @@ public class AhoyFunctionalTest {
             }
         });
 
-        Thread.sleep(30000);
+        Thread.sleep(20000);
         assertEquals("callback for received wasn't invoked", true, wasReceived[0]);
     }
 }
