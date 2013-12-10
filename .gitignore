@@ -13,4 +13,5 @@ lib/
 .gradle/
 *.ipr
 *.iws
+gradle.properties
 build/

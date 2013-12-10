@@ -5,9 +5,78 @@
 
 apply plugin: 'java'
 apply plugin: 'idea'
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+apply plugin: 'maven'
+
+group = 'com.github.aglover'
+version = '1.0.0'
+
+artifacts {
+    archives jar
+    archives sourceJar
+    archives javadocJar
+}
 
 repositories {
     mavenCentral()
+}
+
+signing {
+    sign configurations.archives
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: sonatypeUsername, password: sonatypePassword)
+            }
+            pom.project {
+                name 'Ahoy'
+                packaging 'jar'
+                description "Ahoy! is an asynchronous SQS adapter for AWS's Java SQS library."
+                url 'https://github.com/aglover/ahoy'
+                scm {
+                    url 'scm:git@github.com:aglover/ahoy.git'
+                    connection 'scm:git@github.com:aglover/ahoy.git'
+                    developerConnection 'scm:git@github.com:aglover/ahoy.git'
+                }
+                licenses {
+                    license {
+                        name 'The MIT License (MIT)'
+                        url 'http://opensource.org/licenses/MIT'
+                        distribution 'repo'
+                    }
+                }
+                developers {
+                    developer {
+                        id 'ajglover'
+                        name 'Andrew Glover'
+                    }
+                }
+            }
+        }
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId 'com.github.aglover'
+            artifactId 'ahoy'
+            version '1.0.0'
+            from components.java
+        }
+    }
+
+    repositories {
+        maven {
+            url "https://oss.sonatype.org/content/repositories/snapshots"
+        }
+    }
 }
 
 dependencies {
