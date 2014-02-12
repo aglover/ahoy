@@ -4,7 +4,7 @@ Ahoy! is an asynchronous SQS adapter for [AWS's Java SQS library](http://aws.ama
 
 Ahoy! is designed to be fire-and-forget. Naturally, you don't necessarily want to forget receiving a message; thus, Ahoy! leverages _callbacks_. Callbacks in Java can be implemented via anonymous classes like so:
 
-```
+```java
 SQSAdapter sqs = new SQSAdapter("key", "secret", "some queue");
 sqs.receive(new MessageReceivedCallback() {
   public void onReceive(String messageId, String message) {
@@ -17,7 +17,7 @@ In the code above, `onReceive` will be invoked once a message is popped off of a
 
 You can attach a callback on a `send` as well:
 
-```
+```java
 SQSAdapter sqs = new SQSAdapter("key", "secret", "some queue");
 sqs.send("Message", new MessageSentCallback() {
   public void onSend(String messageId) {
