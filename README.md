@@ -44,9 +44,11 @@ To build with Maven, add the dependencies listed below to your `pom.xml` file:
 
 Alternatively, if you want to use Gradle, add this to your `build.gradle` file:
 
-```java
+```groovy
 compile 'com.github.aglover:ahoy:1.0.1'
 ```
+
+For other build tools like SBT, etc, see Ahoy's [mvnrepository.com](http://mvnrepository.com/artifact/com.github.aglover/ahoy) page. 
 
 ## Some more details
 
