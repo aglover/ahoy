@@ -30,6 +30,24 @@ In this case, you can get a receipt in the form of the AWS ID attached to the SQ
 
 Notice something else? Yeah, that's right, you don't have to deal with the myriad AWS SDK classes required to receive or send a message. No dealing with `SendMessageResult`, `Message`, `SendMessageRequest`, `DeleteMessageRequest`, `ReceiveMessageRequest`, and the list goes on.
 
+## Maven, Gradle, etc
+
+To build with Maven, add the dependencies listed below to your `pom.xml` file:
+
+```xml
+<dependency>
+  <groupId>com.github.aglover</groupId>
+  <artifactId>ahoy</artifactId>
+  <version>1.0.1</version>
+</dependency>
+```
+
+Alternatively, if you want to use Gradle, add this to your `build.gradle` file:
+
+```java
+compile 'com.github.aglover:ahoy:1.0.1'
+```
+
 ## Some more details
 
 This is important so read up. 
