@@ -10,11 +10,21 @@ apply plugin: 'signing'
 apply plugin: 'maven'
 
 group = 'com.github.aglover'
-version = '1.0.0'
+version = '1.0.1'
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from 'build/docs/javadoc'
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
 
 artifacts {
     archives jar
-    archives sourceJar
+    archives sourcesJar
     archives javadocJar
 }
 
