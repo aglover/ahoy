@@ -14,22 +14,34 @@ import java.util.concurrent.Executors;
  * User: aglover
  * Date: 8/27/13
  * Time: 1:56 PM
- * <p/>
- * Sample code: https://github.com/aws/aws-sdk-java/blob/master/src/samples/AmazonSimpleQueueService/SimpleQueueServiceSample.java
- * JavaDocs: http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/sqs/AmazonSQS.html
  */
 public class SQSAdapter {
     private final ExecutorService pool = Executors.newFixedThreadPool(10);
     private AmazonSQS sqs;
     private String queueURL;
 
+    /**
+     * Facilitates customizing AWS client connection, such as setting the region
+     *
+     * @param sqs
+     * @param queueURL
+     */
     public SQSAdapter(final AmazonSQS sqs, final String queueURL) {
         this.sqs = sqs;
         this.queueURL = queueURL;
     }
 
     /**
-     * Assumes east coast region!
+     *
+     * @return instance of underlying AmazonSQS client
+     */
+    public AmazonSQS getAWSClient() {
+        return this.sqs;
+    }
+
+    /**
+     * Assumes east coast region! If you need to set an alternate region, see other
+     * constructor as you can pass in an instance of AmazonSQS
      *
      * @param awsKey
      * @param awsSecret
